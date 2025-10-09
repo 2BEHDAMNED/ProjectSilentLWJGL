@@ -32,7 +32,7 @@ public class ModelLoader {
 	 * @param objFileName
 	 * @return RawModel
 	 */
-	public static RawModel loadOBJ(Loader loader, String objFilePath) {
+	public static RawModel loadOBJ(String objFilePath) {
 		InputStreamReader isr = new InputStreamReader(ModelLoader.class.getResourceAsStream(objFilePath));
 		BufferedReader reader = new BufferedReader(isr);
 		String line;
@@ -89,7 +89,7 @@ public class ModelLoader {
 		int[] indicesArray = convertIndicesListToArray(indices);
 
 		// ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, furthest);
-		return loader.loadToVAO(verticesArray, texturesArray, normalsArray, indicesArray);
+		return Loader.loadToVAO(verticesArray, texturesArray, normalsArray, indicesArray);
 	}
 	
 

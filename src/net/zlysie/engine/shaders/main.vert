@@ -5,6 +5,7 @@ in vec2 textureCoords;
 in vec3 normal;
 
 out vec2 pass_textureCoords;
+out float pass_affine;
 
 out vec3 surfaceNormal;
 out vec3 toLightVector;
@@ -18,15 +19,28 @@ uniform mat4 viewMatrix;
 uniform vec3 lightPosition;
 uniform vec3 lightColour;
 uniform int goraudEnabled;
+uniform vec2 targetResolution;
 
 void main(void) {
 	
 	mat4 matrixCalculations = projectionMatrix * viewMatrix * transformationMatrix;
-	gl_Position = matrixCalculations * vec4(position, 1.0);
+	
+	vec4 vertInClipSpace = matrixCalculations * vec4(position, 1.0);
+	
+	vec4 snapToPixel = projectionMatrix * viewMatrix * transformationMatrix * vec4(position, 1.0);
+	vec4 vertex = snapToPixel;
+	vertex.xyz = snapToPixel.xyz / snapToPixel.w;
+	
+	vec2 grid = vec2(60,45);
+	
+	vertex.x = floor(grid.x * vertex.x) / grid.x;
+	vertex.y = floor(grid.y * vertex.y) / grid.y;
+	vertex.xyz *= snapToPixel.w;
+	
+	gl_Position = vertex;
 	pass_textureCoords = textureCoords;
 	
 	surfaceNormal = (transformationMatrix * vec4(normal,0.0)).xyz;
-	
 	
 	if (goraudEnabled == 1) {
 		// heavily modified goraud vertex shader

@@ -1,6 +1,8 @@
 package net.zlysie.engine.shaders;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 
 import net.zlysie.engine.Camera;
 import net.zlysie.engine.Light;
@@ -28,7 +30,8 @@ public class StaticShader extends ShaderProgram{
 	private int location_lightPosition;
 	private int location_lightColour;
 	private int location_goraudEnabled;
-
+	private int location_targetResolution;
+	
 	@Override
 	protected void getAllUniformLocations() {
 		this.location_transformationMatrix = super.getUniformLocation("transformationMatrix");
@@ -37,7 +40,11 @@ public class StaticShader extends ShaderProgram{
 
 		this.location_lightPosition = super.getUniformLocation("lightPosition");
 		this.location_lightColour = super.getUniformLocation("lightColour");
-		this.location_goraudEnabled = super.getUniformLocation("goraudEnabled");
+		this.location_targetResolution = super.getUniformLocation("targetResolution");
+	}
+	
+	public void loadTargetResultion() {
+		super.loadVector2(location_targetResolution, new Vector2f(Display.getWidth(), Display.getHeight()));
 	}
 	
 	public void loadGoraud(boolean enabled) {

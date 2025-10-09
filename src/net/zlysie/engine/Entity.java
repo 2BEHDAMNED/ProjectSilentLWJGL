@@ -1,5 +1,7 @@
 package net.zlysie.engine;
 
+import java.awt.image.BufferedImage;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import net.zlysie.engine.models.RawModel;
@@ -14,11 +16,15 @@ public class Entity {
 	private float scale = 1.0f;
 	
 	public Entity(String path, String texture) {
-		this.model = new TexturedModel(ModelLoader.loadOBJ(loader, path), new ModelTexture(texture));
+		this.model = new TexturedModel(ModelLoader.loadOBJ(path), new ModelTexture(Loader.loadTexture(texture)));
+	}
+	
+	public Entity(String path, BufferedImage texture) {
+		this.model = new TexturedModel(ModelLoader.loadOBJ(path), new ModelTexture(Loader.loadTexture(texture)));
 	}
 	
 	public Entity(String path, int texture) {
-		this.model = new TexturedModel(ModelLoader.loadOBJ(loader, path), new ModelTexture(texture));
+		this.model = new TexturedModel(ModelLoader.loadOBJ(path), new ModelTexture(texture));
 	}
 	
 	public Entity(RawModel model, int texture, Vector3f position, Vector3f rotation, float scale) {
