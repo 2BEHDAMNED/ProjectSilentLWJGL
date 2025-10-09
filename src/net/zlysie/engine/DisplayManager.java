@@ -14,7 +14,7 @@ public class DisplayManager {
 	public static void createDisplay() {
 		try {
 			Display.setDisplayMode(new DisplayMode(640, 480));
-			Display.setTitle("Learning LWJGL... Again?");
+			Display.setTitle("Project-SilentLWJGL");
 			Display.create();
 		} catch (LWJGLException e) {
 			// TODO Auto-generated catch block

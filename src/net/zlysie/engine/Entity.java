@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import net.zlysie.engine.models.RawModel;
 import net.zlysie.engine.models.TexturedModel;
+import net.zlysie.engine.utils.obj.ModelLoader;
 
 public class Entity {
 
@@ -12,8 +13,12 @@ public class Entity {
 	private Vector3f rotation = new Vector3f();
 	private float scale = 1.0f;
 	
-	public Entity(RawModel model, int texture) {
-		this.model = new TexturedModel(model, new ModelTexture(texture));
+	public Entity(String path, String texture) {
+		this.model = new TexturedModel(ModelLoader.loadOBJ(loader, path), new ModelTexture(texture));
+	}
+	
+	public Entity(String path, int texture) {
+		this.model = new TexturedModel(ModelLoader.loadOBJ(loader, path), new ModelTexture(texture));
 	}
 	
 	public Entity(RawModel model, int texture, Vector3f position, Vector3f rotation, float scale) {
