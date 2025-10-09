@@ -13,7 +13,7 @@ public class DisplayManager {
 	
 	public static void createDisplay() {
 		try {
-			Display.setDisplayMode(new DisplayMode(1280, 720));
+			Display.setDisplayMode(new DisplayMode(640, 480));
 			Display.setTitle("Learning LWJGL... Again?");
 			Display.create();
 		} catch (LWJGLException e) {

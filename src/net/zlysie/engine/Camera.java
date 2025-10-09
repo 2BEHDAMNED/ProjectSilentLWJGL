@@ -85,17 +85,7 @@ public class Camera {
 	 * Moves the camera in which direction the player is facing (when moving).<br>
 	 * Fly cam function within else, just do lock on player.
 	 */
-	public void update(){
-		//flyCam();
-		System.out.println("update");
-	}
-	
-	boolean lockInBalls = false;
-	/**
-	 * Fly cam (will most likely be temporary)
-	 */
 	public void move() {
-		calculateZoom();
 		if(Mouse.isGrabbed()) {
 			Mouse.setCursorPosition(Display.getWidth()/2, Display.getHeight()/2);
 		}
@@ -133,7 +123,7 @@ public class Camera {
 		}
 		
 		if(Mouse.isGrabbed()) {
-			pitch -= Mouse.getDY() * 0.3f*2;
+			pitch -= Mouse.getDY() * 0.3f;
 			if(pitch < -maxVerticalTurn){
 				pitch = -maxVerticalTurn;
 			}else if(pitch > maxVerticalTurn){
@@ -159,35 +149,12 @@ public class Camera {
 	public float getPitch() {
 		return pitch;
 	}
+	
 	public float getYaw() {
 		return yaw;
 	}
+	
 	public float getRoll() {
 		return roll;
-	}
-	
-	/**
-	 * looksmaxxing
-	 */
-	private boolean lockIn = false;
-	/**
-	 * Calculates the scroll wheel or I/O keys to factor in how far the camera is using {@link #distanceFromPlayer}
-	 */
-	private void calculateZoom(){
-		float zoomLevel = Mouse.getDWheel() * 0.05f;
-		
-		if(!lockIn) {
-			if(Keyboard.isKeyDown(Keyboard.KEY_I)){
-				zoomLevel = 2;
-				lockIn = true;
-			} else if(Keyboard.isKeyDown(Keyboard.KEY_O)) {
-				zoomLevel = -2;
-				lockIn = true;
-			}
-		} else { 
-			if(!Keyboard.isKeyDown(Keyboard.KEY_I) && !Keyboard.isKeyDown(Keyboard.KEY_O)) {
-				lockIn = false;
-			}
-		}
 	}
 }

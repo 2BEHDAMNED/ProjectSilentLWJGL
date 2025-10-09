@@ -25,6 +25,9 @@ void main(void) {
 	gl_Position = matrixCalculations * vec4(position, 1.0);
 	pass_textureCoords = textureCoords;
 	
+	surfaceNormal = (transformationMatrix * vec4(normal,0.0)).xyz;
+	
+	
 	if (goraudEnabled == 1) {
 		// heavily modified goraud vertex shader
 		// original source: https://github.com/JChan2787/Goraud_Phong_Shading/blob/master/gouraud.vert.glsl
@@ -32,27 +35,27 @@ void main(void) {
 		vec4 ambient = vec4(0.2, 0.2, 0.2, 1.0);
 		ambient = vec4(0.4140625,0.390625,0.4375,1);
 		vec4 diffuse = vec4(0.5, 0.5, 0.5, 1.0);
-		diffuse = vec4(0.3,0.3,0.3,1);
+		diffuse = vec4(0.2,0.2,0.2,1);
 	
+		toLightVector = (transformationMatrix * vec4(position,1.0)).xyz - lightPosition;
 		vec4 matrixedLightPosition = matrixCalculations * vec4(lightPosition,1.0);
 		
 		//Getting the direction vector for both light-sources
-		vec3 dirLight = vec3((transformationMatrix * vec4(position, 1.0)) - (vec4(lightPosition,1.0)));
+		vec3 dirLight = toLightVector;
 		
 		//Normalizing the direction vectors
 		//Getting the dot product of N & L
-		float nDot = dot(normal, normalize(-dirLight));
+		float nDot = dot(normalize(surfaceNormal), normalize(-dirLight));
 		
-		vec4 depthVert = viewMatrix * vec4(position, 1.0);
-		float depth = abs(depthVert.z / depthVert.w);
+		vec4 positionRelativeToCamera = viewMatrix * (transformationMatrix * vec4(position, 1.0));
+		float depth = length(positionRelativeToCamera.xyz);
 		
 		calculatedFogDensity = clamp((15 - depth) / (0 - 15), 0.0, 1.0);
 		
 		vec4 diffuseLightCalculation = clamp(diffuse * vec4((lightColour*3),1.0) * max(nDot, 0.0), 0.0, 1.0); //Diffuse
 		
-		calculatedLightColour = ambient + diffuseLightCalculation; // Sum the colors and pass it along to the fragment shader.
+		calculatedLightColour = (ambient/5) + diffuseLightCalculation; // Sum the colors and pass it along to the fragment shader.
 	} else {
-		surfaceNormal = (transformationMatrix * vec4(normal,0.0)).xyz;
 		toLightVector = lightPosition - (transformationMatrix * vec4(position,1.0)).xyz;
 	}
 	
