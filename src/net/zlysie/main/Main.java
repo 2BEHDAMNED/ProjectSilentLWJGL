@@ -1,7 +1,5 @@
 package net.zlysie.main;
 
-import java.awt.Color;
-
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -19,15 +17,15 @@ public class Main {
 		
 		MasterRenderer renderer = new MasterRenderer();
 		
-		Entity entity = new Entity("/head.obj", "/cat_head.png");
-		Entity entity2 = new Entity("/lwjgl-player.obj", Loader.generateTexture(Color.gray, 32, 32));
+		Entity entity = new Entity("/spartan.obj", "/spartan.png");
+		Entity entity2 = new Entity("/silentcat.obj", "/cat.png");
 		
-		entity.setPosition(-5, 0, 0);
-		entity.setRotation(new Vector3f(0,0,0));
+		entity.setPosition(-2.5f, 0, 0);
+		entity.setRotation(new Vector3f(0,270,0));
 		
-		entity2.setPosition(5, -1.5f, 0);
-		entity2.setRotation(new Vector3f(0,180f,0));
-		//entity2.setScale(0.1f);
+		entity2.setPosition(2.5f, 0, 0);
+		entity2.setRotation(new Vector3f(0,270f,0));
+		entity.setScale(0.1f);
 
 		Camera camera = new Camera(new Vector3f(0,2,10), new Vector3f(0, 0, 0));
 		//camera.setPosition(0, 4, 0);
@@ -46,7 +44,6 @@ public class Main {
 			renderer.render(light, camera);
 			
 			DisplayManager.pollDisplay();
-
 		}
 
 		renderer.cleanUp();

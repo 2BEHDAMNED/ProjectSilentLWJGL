@@ -51,26 +51,31 @@ vec4 dither(vec2 position, vec4 color) {
 void main(void) {
 	
 	if(goraudEnabled == 1) {
-		vec4 fragColor = mix(dither(pass_textureCoords.xy, (texture(textureSampler, pass_textureCoords) * calculatedLightColour)), vec4(0.4140625,0.390625,0.4375,1.0), calculatedFogDensity);
-		
-		float levels = 10.0;
-		float greyscale = max(fragColor.r, max(fragColor.g, fragColor.b));
-		
-		float lower = floor(greyscale * levels) / levels;
-		float lowerDiff = abs(greyscale - lower);
-		
-		float upper = ceil(greyscale * levels) / levels;
-		float upperDiff = abs(upper - greyscale);
-		
-		float level= lowerDiff <= upperDiff ? lower : upper;
-		float adjustment = level / greyscale;
-		
-		fragColor.rgb = fragColor.rgb * adjustment;
-		
-		//fragColor.rgb = pow(fragColor.rgb, vec3(gamma.x));
-		
-		out_Colour = fragColor;
-		//out_Colour = texture(textureSampler, pass_textureCoords) * calculatedLightColour);
+		if(calculatedFogDensity >= 0.99) { // discard if way past in the fog
+			discard;
+		} else {
+			vec4 fragColor = mix(dither(pass_textureCoords.xy, (texture(textureSampler, pass_textureCoords) * calculatedLightColour)), vec4(0.4140625,0.390625,0.4375,1.0), calculatedFogDensity);
+			
+			float levels = 10.0;
+			float greyscale = max(fragColor.r, max(fragColor.g, fragColor.b));
+			
+			float lower = floor(greyscale * levels) / levels;
+			float lowerDiff = abs(greyscale - lower);
+			
+			float upper = ceil(greyscale * levels) / levels;
+			float upperDiff = abs(upper - greyscale);
+			
+			float level= lowerDiff <= upperDiff ? lower : upper;
+			float adjustment = level / greyscale;
+			
+			fragColor.rgb = fragColor.rgb * adjustment;
+			
+			//fragColor.rgb = pow(fragColor.rgb, vec3(gamma.x));
+			
+			out_Colour = fragColor;
+			
+			//out_Colour = texture(textureSampler, pass_textureCoords) * calculatedLightColour;
+		}
 	} else {
 		vec3 unitNormal = normalize(surfaceNormal);
 		vec3 unitLightVector = normalize(toLightVector);

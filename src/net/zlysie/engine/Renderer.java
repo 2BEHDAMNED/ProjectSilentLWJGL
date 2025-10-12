@@ -36,15 +36,16 @@ public class Renderer {
 	
 	public void prepare() {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glClearColor(1, 0, 0, 1);
+		GL11.glClearColor(0.4140625f,0.390625f,0.4375f,1.0f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
 	}
 	
 	public void render(Map<TexturedModel, List<Entity>> entities, Light light, Camera camera) {
 		shader.start();
+		shader.loadGoraud(true);
 		shader.loadLight(light);
 		shader.loadViewMatrix(camera);
-		shader.loadGoraud(true);
+		
 		for(TexturedModel model : entities.keySet()) {
 			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);

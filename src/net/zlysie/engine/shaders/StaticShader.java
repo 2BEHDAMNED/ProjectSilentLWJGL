@@ -35,6 +35,7 @@ public class StaticShader extends ShaderProgram{
 	@Override
 	protected void getAllUniformLocations() {
 		this.location_transformationMatrix = super.getUniformLocation("transformationMatrix");
+		this.location_goraudEnabled = super.getUniformLocation("goraudEnabled");
 		this.location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		this.location_viewMatrix = super.getUniformLocation("viewMatrix");
 
