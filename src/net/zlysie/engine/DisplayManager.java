@@ -32,7 +32,7 @@ public class DisplayManager {
 	}
 
 	public static void pollDisplay() {
-		
+		Display.sync(60);
 		Display.update();
 		long currentFrameTime = getCurrentTime();
 		delta = (currentFrameTime - lastFrameTime) / 1000f;

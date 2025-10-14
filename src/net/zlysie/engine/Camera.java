@@ -1,15 +1,11 @@
 package net.zlysie.engine;
 
-import javax.vecmath.Quat4f;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.bulletphysics.linearmath.Transform;
-
-import net.zlysie.engine.utils.VectorMaths;
 
 /**
  * Camera class. Allows the player to see the world.
@@ -23,8 +19,8 @@ public class Camera {
 	public float pitch = 0;
 	public float yaw = 0;
 	public float roll = 0;
-	int maxVerticalTurn = 90; // max angle
-	
+	int maxVerticalTurn = 80; // max angle
+	public boolean lockedMouse = false;
 	
 	/**
 	 * Camera constructor. Sets position and rotation.
@@ -36,6 +32,7 @@ public class Camera {
 	public Camera(Vector3f position, Vector3f rotation) {
 		this.position = position;
 		this.pitch = rotation.x;
+		this.yaw = rotation.y;
 		this.roll = rotation.z;
 	}
 	
@@ -90,12 +87,28 @@ public class Camera {
 	private float distanceFromPlayer = 10f;
 	private float angleAroundPlayer = 0f;
 	
+	private boolean flagLockLockedMouse = false;
+	
 	public void move(Transform transform) {
 		calculateZoom();
 		calculatePitch();
 		calculateAngleAroundPlayer();
 		calculateCameraPosition(transform);
-		yaw = 180 - (angleAroundPlayer%360);
+		
+		if(!flagLockLockedMouse) {
+			if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+				lockedMouse = !lockedMouse;
+				flagLockLockedMouse = true;
+			}
+		} else {
+			if(!Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+				flagLockLockedMouse = false;
+			}
+		}
+		
+		Mouse.setGrabbed(lockedMouse);
+		
+		yaw = 180 - (angleAroundPlayer);
 	}
 	
 	private void calculateCameraPosition(Transform transform) {
@@ -108,7 +121,7 @@ public class Camera {
 		
 		position.x = transform.origin.x - offsetX;
 		position.z = transform.origin.z - offsetZ;
-		position.y = transform.origin.y + verticalDistance;
+		position.y = transform.origin.y + verticalDistance + 2f;
 	}
 	
 	private float calculateHorizontalDistance() {
@@ -125,14 +138,14 @@ public class Camera {
 	}
 	
 	private void calculatePitch() {
-		if(Mouse.isButtonDown(1)) {
+		if(lockedMouse) {
 			float pitchChange = Mouse.getDY() * 0.3f;
 			pitch -= pitchChange;
 		}
 	}
 	
 	private void calculateAngleAroundPlayer() {
-		if(Mouse.isButtonDown(1)) {
+		if(lockedMouse) {
 			float angleChange = Mouse.getDX() * 0.3f;
 			angleAroundPlayer -= angleChange;
 		}
@@ -209,7 +222,7 @@ public class Camera {
 	}
 	
 	public float getYaw() {
-		return yaw % 360;
+		return yaw;
 	}
 	
 	public float getRoll() {

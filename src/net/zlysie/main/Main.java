@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import javax.vecmath.Quat4f;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -51,32 +52,22 @@ public class Main {
 		Transform transform = new Transform();
 		
 		while(!Display.isCloseRequested()) {
-			//entity.increaseRotation(0, 2, 0);
+			
 			world.clientMoveAndDisplay(camera);
 			world.ghostObject.getWorldTransform(transform);
 			camera.move(transform);
-			
-			Quat4f q = transform.getRotation(new Quat4f());
-			Vector3f eulers = VectorMaths.toEulerAngles(q);
-			
-			//world.character.setUpAxis((int)-camera.getYaw());
-			
-			//model.update();
-			
-			model.setPosition(transform.origin.x, transform.origin.y, transform.origin.z);
-			model.setRotation(eulers.x, -camera.getYaw(), eulers.z);
-			//model.setRotation(eulers.x,eulers.y, eulers.z);
-			
+			model.setPosition(transform.origin);
+			if(!world.idle) {
+				model.setRotation(0, -camera.getYaw()+world.calculateAngleFromDirection(), 0);
+			}
+			//System.out.println(-camera.getYaw());
 			//light.setPosition(camera.getPosition().x, 0, camera.getPosition().z);
 			
 			renderer.processEntity(model);
 			renderer.processEntity(entity);
 			
 			renderer.render(light, camera);
-			//System.out.println(DisplayManager.getFPS());
 			DisplayManager.pollDisplay();
-			
-			
 		}
 
 		renderer.cleanUp();
@@ -84,5 +75,4 @@ public class Main {
 		Loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
-
 }

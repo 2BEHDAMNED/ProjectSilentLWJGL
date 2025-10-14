@@ -172,6 +172,12 @@ public class AnimatedModel {
 		this.position.z = dz;
 	}
 	
+	public void setPosition(javax.vecmath.Vector3f d) {
+		this.position.x = d.x;
+		this.position.y = d.y;
+		this.position.z = d.z;
+	}
+	
 	public void setRotation(float dx, float dy, float dz) {
 		this.rotation.x = dx;
 		this.rotation.y = dy;

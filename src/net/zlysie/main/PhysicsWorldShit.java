@@ -1,8 +1,5 @@
 package net.zlysie.main;
 
-import static com.bulletphysics.demos.opengl.IGL.GL_COLOR_BUFFER_BIT;
-import static com.bulletphysics.demos.opengl.IGL.GL_DEPTH_BUFFER_BIT;
-
 import javax.vecmath.Vector3f;
 
 import org.lwjgl.input.Keyboard;
@@ -31,14 +28,16 @@ import com.bulletphysics.util.ObjectArrayList;
 import net.zlysie.engine.Camera;
 import net.zlysie.engine.DisplayManager;
 
+
+
 public class PhysicsWorldShit {
 	
-	private boolean idle; 
+	boolean idle; 
+	public Direction direction;
 	private int gForward = 0;
 	private int gBackward = 0;
 	private int gLeft = 0;
 	private int gRight = 0;
-	private int gJump = 0;
 	
 	public KinematicCharacterController character;
 	public PairCachingGhostObject ghostObject;
@@ -100,13 +99,65 @@ public class PhysicsWorldShit {
 	}
 	
 	public void input() {
+		
 		gForward = Keyboard.isKeyDown(Keyboard.KEY_W) ? 1 : 0;
 		gBackward = Keyboard.isKeyDown(Keyboard.KEY_S) ? 1 : 0;
 		gLeft = Keyboard.isKeyDown(Keyboard.KEY_A) ? 1 : 0;
 		gRight = Keyboard.isKeyDown(Keyboard.KEY_D) ? 1 : 0;
-		gJump = Keyboard.isKeyDown(Keyboard.KEY_SPACE) ? 1 : 0;
+		
+		if(gForward == 1) {
+			direction = Direction.FORWARDS;
+		} else if(gBackward == 1) {
+			direction = Direction.BACKWARDS;
+		} else if(gLeft == 1) {
+			direction = Direction.LEFT;
+		} else if(gRight == 1) {
+			direction = Direction.RIGHT;
+		} 
+		
+		if(gForward == 1 && gLeft == 1) {
+			direction = Direction.FORWARDSLEFT;
+		} else if(gForward == 1 && gRight == 1) {
+			direction = Direction.FORWARDSRIGHT;
+		} else if(gBackward == 1 && gLeft == 1) {
+			direction = Direction.BACKWARDSLEFT;
+		} else if(gBackward == 1 && gRight == 1) {
+			direction = Direction.BACKWARDSRIGHT;
+		}
 		
 		idle = gForward == 0 && gBackward == 0 && gLeft == 0 && gRight == 0;
+		direction = idle ? Direction.IDLE : direction;
+	}
+	
+	public float calculateAngleFromDirection() {
+		float angle = 0;
+		switch(direction) {
+		case BACKWARDSLEFT:
+			angle = -45;
+			break;
+		case BACKWARDSRIGHT:
+			angle = 45;
+			break;
+		case FORWARDSLEFT:
+			angle = 45;
+			break;
+		case FORWARDSRIGHT:
+			angle = -45;
+			break;
+		case LEFT:
+			angle = 90;
+			break;
+		case RIGHT:
+			angle = -90;
+			break;
+		default:
+			angle = 0;
+			break;
+		}
+		
+		System.out.println(angle);
+		
+		return angle;
 	}
 	
 	public void clientMoveAndDisplay(Camera camera) {
@@ -115,77 +166,56 @@ public class PhysicsWorldShit {
 		input();
 
 		if (dynamicsWorld != null) {
-			// during idle mode, just run 1 simulation step maximum
-			int maxSimSubSteps = idle ? 1 : 2;
-			if (idle) {
-				//dt = 1.0f / 420.f;
-			}
-
-			// set walkDirection for our character
-			Transform xform = ghostObject.getWorldTransform(new Transform());
-
-			Vector3f forwardDir = new Vector3f();
-			xform.basis.getRow(2, forwardDir);
-			//printf("forwardDir=%f,%f,%f\n",forwardDir[0],forwardDir[1],forwardDir[2]);
-			Vector3f upDir = new Vector3f();
-			xform.basis.getRow(1, upDir);
-			Vector3f strafeDir = new Vector3f();
-			xform.basis.getRow(0, strafeDir);
-			forwardDir.normalize();
-			upDir.normalize();
-			strafeDir.normalize();
-
+			
 			Vector3f walkDirection = new Vector3f(0.0f, 0.0f, 0.0f);
-			float walkVelocity = 1.1f * 4.0f; // 4 km/h -> 1.1 m/s
-			float walkSpeed = walkVelocity * DisplayManager.getFrameTime() * 100 * characterScale;
 			
 			
-			
-			int vert = 0;
-			if(gForward != 0) {
-				vert = -1;
-			} else if(gBackward != 0) {
-				vert = 1;
-			}
-			
-			int horz = 0;
-			
-			if(gLeft != 0) {
-				horz = -1;
-			} else if(gRight != 0) {
-				horz = 1;
-			}
-			
-			float distanceVert = vert * dt * 1000;
-			float distanceHorz = horz * dt * 1000;
-			
-			float dVertX = (float) (distanceVert * Math.sin(Math.toRadians(-camera.getYaw())));
-			float dVertZ = (float) (distanceVert * Math.cos(Math.toRadians(-camera.getYaw())));
+			if(!idle) {
+				
+				float walkVelocity = 1.1f * 4.0f; // 4 km/h -> 1.1 m/s
+				float walkSpeed = walkVelocity * DisplayManager.getFrameTime() * 100 * characterScale;
+				
+				int vert = 0;
+				     if(gForward != 0) { vert = -1; } 
+				else if(gBackward != 0) { vert = 1; }
+				
+				int horz = 0;
+				     if(gLeft != 0) { horz = -1; } 
+				else if(gRight != 0) { horz = 1; }
+				
+				float distanceVert = vert * walkSpeed;
+				float distanceHorz = horz * walkSpeed;
+				
+				float dVertX = (float) (distanceVert * Math.sin(Math.toRadians(-camera.getYaw())));
+				float dVertZ = (float) (distanceVert * Math.cos(Math.toRadians(-camera.getYaw())));
 
-			float dHorzX = (float) (distanceHorz * Math.sin(Math.toRadians(-camera.getYaw() + 90)));
-			float dHorzZ = (float) (distanceHorz * Math.cos(Math.toRadians(-camera.getYaw() + 90)));
-			
-			strafeDir = new Vector3f(dHorzX+dVertX, 0, dHorzZ+dVertZ);
-			
-			System.out.println(strafeDir);
-			
-			
-			walkDirection.add(strafeDir);
-			
-			if(gJump != 0) {
-				if(character.canJump()) {
-					character.jump();
-				}
+				float dHorzX = (float) (distanceHorz * Math.sin(Math.toRadians(-camera.getYaw() + 90)));
+				float dHorzZ = (float) (distanceHorz * Math.cos(Math.toRadians(-camera.getYaw() + 90)));
+				
+				Vector3f strafeDir = new Vector3f(dHorzX+dVertX, 0, dHorzZ+dVertZ);
+				strafeDir.normalize();
+				strafeDir.scale(0.05f);
+				
+				walkDirection.add(strafeDir);
+				
+				walkDirection.scale(walkSpeed);
+				
 			}
-
-			walkDirection.scale(walkSpeed);
 			character.setWalkDirection(walkDirection);
-
-			dynamicsWorld.stepSimulation(dt, maxSimSubSteps);
-
-			// optional but useful: debug drawing
-			dynamicsWorld.debugDrawWorld();
+			dynamicsWorld.stepSimulation(dt, 2);
 		}
+	}
+	
+	public static enum Direction {
+		IDLE,
+		FORWARDS,
+		FORWARDSLEFT,
+		FORWARDSRIGHT,
+		BACKWARDS,
+		BACKWARDSLEFT,
+		BACKWARDSRIGHT,
+		LEFT,
+		RIGHT
 	}
 	
 }
