@@ -19,12 +19,27 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import net.zlysie.engine.models.RawModel;
+import net.zlysie.engine.utils.data.MeshData;
 
 public class Loader {
 	
 	private static List<Integer> vaos = new ArrayList<>();
 	private static List<Integer> vbos = new ArrayList<>();
 	private static List<Integer> textures = new ArrayList<>();
+	
+	public static RawModel loadToVAO(MeshData data) {
+		int vaoID = createVAO();
+		bindIndicesBuffer(data.getIndices());
+		storeDataInAttributeList(0, 3, data.getVertices());
+		storeDataInAttributeList(1, 2, data.getTextureCoords());
+		storeDataInAttributeList(2, 3, data.getNormals());
+		if(data.isAnimated()) {
+			storeDataInAttributeList(3, 3, data.getJointIds());
+			storeDataInAttributeList(4, 3, data.getVertexWeights());
+		}
+		unbindVAO();
+		return new RawModel(vaoID, data.getIndices().length, data);
+	}
 	
 	public static RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
 		int vaoID = createVAO();
@@ -50,6 +65,16 @@ public class Loader {
 		FloatBuffer buffer = Loader.storeDataInFloatBuffer(data);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
+	
+	private static void storeDataInAttributeList(int attributeNumber, int coordinateSize, int[] data) {
+		int vboID = GL15.glGenBuffers();
+		vbos.add(vboID);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+		IntBuffer buffer = Loader.storeDataInIntBuffer(data);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+		GL30.glVertexAttribIPointer(attributeNumber, coordinateSize, GL11.GL_INT, coordinateSize * 4, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 	

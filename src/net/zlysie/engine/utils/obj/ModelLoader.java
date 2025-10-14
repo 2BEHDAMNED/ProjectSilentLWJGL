@@ -11,6 +11,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 import net.zlysie.engine.Loader;
 import net.zlysie.engine.models.RawModel;
+import net.zlysie.engine.utils.data.MeshData;
+import net.zlysie.engine.utils.data.Vertex;
 
 /**
  * Loads OBJ Files.
@@ -87,9 +89,10 @@ public class ModelLoader {
 		float[] tangentsArray = new float[vertices.size() * 3];
 		convertDataToArrays(vertices, textures, normals, verticesArray, texturesArray, normalsArray, tangentsArray);
 		int[] indicesArray = convertIndicesListToArray(indices);
-
-		// ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, furthest);
-		return Loader.loadToVAO(verticesArray, texturesArray, normalsArray, indicesArray);
+		
+		
+		
+		return Loader.loadToVAO(new MeshData(verticesArray, texturesArray, normalsArray, indicesArray));
 	}
 	
 
