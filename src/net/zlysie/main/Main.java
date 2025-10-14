@@ -1,5 +1,7 @@
 package net.zlysie.main;
 
+import java.awt.Color;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -25,20 +27,22 @@ public class Main {
 		Animation anim = AnimationLoader.loadAnimation("/models/cat/animation.dae");
 		model.doAnimation(anim);
 		
-		Entity entity = new Entity("/models/spartan/model.obj", "/models/spartan/texture.png");
+		Entity entity = new Entity("/models/gm_construct.obj", Loader.generateTexture(Color.white, 16, 16));
+		
+		/*Entity entity = new Entity("/models/spartan/model.obj", "/models/spartan/texture.png");
 		
 		entity.setPosition(-2.5f, 0, 0);
 		entity.setRotation(new Vector3f(0,270,0));
-		entity.setScale(0.1f);
+		entity.setScale(0.1f);*/
 		
 		model.setPosition(2.5f, 0, 0);
 		model.setRotation(0,90f,0);
 		
 
-		Camera camera = new Camera(new Vector3f(0,2,10), new Vector3f(0, 0, 0));
+		Camera camera = new Camera(new Vector3f(0,0,10), new Vector3f());
 		//camera.setPosition(0, 4, 0);
 		//camera.setRotation(90, 0, 0);
-		Light light = new Light(new Vector3f(0,5,0), new Vector3f(00,0,0));
+		Light light = new Light(new Vector3f(0,1005,0), new Vector3f(0,0,0));
 		
 		while(!Display.isCloseRequested()) {
 			//entity.increaseRotation(0, 2, 0);
@@ -49,10 +53,11 @@ public class Main {
 			
 			//light.setPosition(camera.getPosition().x, 0, camera.getPosition().z);
 			
-			renderer.processEntity(entity);
 			renderer.processEntity(model);
+			renderer.processEntity(entity);
+			
 			renderer.render(light, camera);
-			System.out.println(DisplayManager.getFPS());
+			//System.out.println(DisplayManager.getFPS());
 			DisplayManager.pollDisplay();
 			
 			

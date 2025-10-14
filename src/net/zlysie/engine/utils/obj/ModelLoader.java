@@ -92,7 +92,7 @@ public class ModelLoader {
 		
 		
 		
-		return Loader.loadToVAO(new MeshData(verticesArray, texturesArray, normalsArray, indicesArray));
+		return Loader.loadToVAO(verticesArray, texturesArray, normalsArray, indicesArray);
 	}
 	
 

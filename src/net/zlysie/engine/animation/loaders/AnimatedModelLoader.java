@@ -1,5 +1,7 @@
 package net.zlysie.engine.animation.loaders;
 
+import java.awt.image.BufferedImage;
+
 import net.zlysie.engine.Loader;
 import net.zlysie.engine.ModelTexture;
 import net.zlysie.engine.animation.Joint;
@@ -32,6 +34,15 @@ public class AnimatedModelLoader {
 		Joint headJoint = createJoints(skeletonData.headJoint);
 		return new AnimatedModel(model, texture, headJoint, skeletonData.jointCount);
 	}
+	
+	public static AnimatedModel loadEntity(String modelFile, BufferedImage image) {
+		AnimatedModelData entityData = ColladaLoader.loadColladaModel(modelFile, MAX_WEIGHTS);
+		RawModel model = createVao(entityData.getMeshData());
+		ModelTexture texture = new ModelTexture(Loader.loadTexture(image));
+		SkeletonData skeletonData = entityData.getJointsData();
+		Joint headJoint = createJoints(skeletonData.headJoint);
+		return new AnimatedModel(model, texture, headJoint, skeletonData.jointCount);
+	}
 
 	/**
 	 * Constructs the joint-hierarchy skeleton from the data extracted from the
@@ -60,5 +71,7 @@ public class AnimatedModelLoader {
 	private static RawModel createVao(MeshData data) {
 		return Loader.loadToVAO(data);
 	}
+
+
 
 }

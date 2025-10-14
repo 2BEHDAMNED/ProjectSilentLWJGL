@@ -13,5 +13,8 @@
 	<classpathentry kind="lib" path="lwjgl-2.9.1/jar/lwjgl.jar"/>
 	<classpathentry kind="lib" path="lwjgl-2.9.1/jar/slick-util.jar"/>
 	<classpathentry kind="lib" path="lwjgl-2.9.1/jar/pngdecoder-1.0.jar"/>
+	<classpathentry kind="lib" path="lwjgl-2.9.1/jar/jbullet.jar"/>
+	<classpathentry kind="lib" path="lwjgl-2.9.1/jar/jbullet-demos.jar"/>
+	<classpathentry kind="lib" path="lwjgl-2.9.1/jar/vecmath-1.5.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
