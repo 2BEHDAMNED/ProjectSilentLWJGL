@@ -87,7 +87,7 @@ void main(void){
 		
 		vec4 diffuseLightCalculation = clamp(diffuse * vec4((lightColour*3),1.0) * max(nDot, 0.0), 0.0, 1.0); //Diffuse
 		
-		calculatedLightColour = (ambient/5) + diffuseLightCalculation; // Sum the colors and pass it along to the fragment shader.
+		calculatedLightColour = (ambient*1.1) + diffuseLightCalculation; // Sum the colors and pass it along to the fragment shader.
 	} else {
 		toLightVector = lightPosition - (transformationMatrix * totalLocalPos).xyz;
 	}

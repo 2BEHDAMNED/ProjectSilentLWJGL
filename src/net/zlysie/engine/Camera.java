@@ -99,6 +99,7 @@ public class Camera {
 		} else {
 			speeds = 2;
 		}
+		speeds *= DisplayManager.getFrameTime()*100;
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			position.y += speed * speeds;

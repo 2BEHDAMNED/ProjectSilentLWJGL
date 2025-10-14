@@ -22,7 +22,7 @@ public class Main {
 		MasterRenderer renderer = new MasterRenderer();
 		
 		AnimatedModel model = AnimatedModelLoader.loadEntity("/models/cat/model.dae", "/models/cat/texture.png");
-		Animation anim = AnimationLoader.loadAnimation("/models/cat/model.dae");
+		Animation anim = AnimationLoader.loadAnimation("/models/cat/animation.dae");
 		model.doAnimation(anim);
 		
 		Entity entity = new Entity("/models/spartan/model.obj", "/models/spartan/texture.png");
@@ -38,20 +38,24 @@ public class Main {
 		Camera camera = new Camera(new Vector3f(0,2,10), new Vector3f(0, 0, 0));
 		//camera.setPosition(0, 4, 0);
 		//camera.setRotation(90, 0, 0);
-		Light light = new Light(new Vector3f(0,0,0), new Vector3f(1,1,1));
+		Light light = new Light(new Vector3f(0,5,0), new Vector3f(00,0,0));
 		
 		while(!Display.isCloseRequested()) {
 			//entity.increaseRotation(0, 2, 0);
 			camera.move();
 			model.update();
 			
-			//light.setPosition(camera.getPosition().x, 1, camera.getPosition().z);
+			
+			
+			//light.setPosition(camera.getPosition().x, 0, camera.getPosition().z);
 			
 			renderer.processEntity(entity);
 			renderer.processEntity(model);
 			renderer.render(light, camera);
-			
+			System.out.println(DisplayManager.getFPS());
 			DisplayManager.pollDisplay();
+			
+			
 		}
 
 		renderer.cleanUp();
