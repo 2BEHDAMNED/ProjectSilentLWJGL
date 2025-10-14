@@ -61,8 +61,6 @@ import com.bulletphysics.util.ObjectArrayList;
  */
 public class CharacterDemo extends DemoApplication {
 
-	private final int maxProxies = 32766;
-	private final int maxOverlap = 65535;
 	private static int gForward = 0;
 	private static int gBackward = 0;
 	private static int gLeft = 0;

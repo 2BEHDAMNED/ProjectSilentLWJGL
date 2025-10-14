@@ -44,9 +44,7 @@ void main(void){
 	
 	mat4 matrixCalculations = projectionMatrix * viewMatrix * transformationMatrix;
 	
-	vec4 vertInClipSpace = matrixCalculations * totalLocalPos;
-	
-	vec4 snapToPixel = projectionMatrix * viewMatrix * transformationMatrix * totalLocalPos;
+	vec4 snapToPixel = matrixCalculations * totalLocalPos;
 	vec4 vertex = snapToPixel;
 	vertex.xyz = snapToPixel.xyz / snapToPixel.w;
 	

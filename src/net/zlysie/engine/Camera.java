@@ -1,9 +1,15 @@
 package net.zlysie.engine;
 
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
+
+import com.bulletphysics.linearmath.Transform;
+
+import net.zlysie.engine.utils.VectorMaths;
 
 /**
  * Camera class. Allows the player to see the world.
@@ -81,6 +87,57 @@ public class Camera {
 	private float speed = 0.1f;
 	private float moveAt;
 	
+	private float distanceFromPlayer = 10f;
+	private float angleAroundPlayer = 0f;
+	
+	public void move(Transform transform) {
+		calculateZoom();
+		calculatePitch();
+		calculateAngleAroundPlayer();
+		calculateCameraPosition(transform);
+		yaw = 180 - (angleAroundPlayer%360);
+	}
+	
+	private void calculateCameraPosition(Transform transform) {
+		float horizontalDistance = calculateHorizontalDistance();
+		float verticalDistance = calculateVerticalDistance();
+		
+		float theta =  angleAroundPlayer;
+		float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
+		float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
+		
+		position.x = transform.origin.x - offsetX;
+		position.z = transform.origin.z - offsetZ;
+		position.y = transform.origin.y + verticalDistance;
+	}
+	
+	private float calculateHorizontalDistance() {
+		return (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch)));
+	}
+	
+	private float calculateVerticalDistance() {
+		return (float) (distanceFromPlayer * Math.sin(Math.toRadians(pitch)));
+	}
+	
+	private void calculateZoom() {
+		float zoomLevel = Mouse.getDWheel() * 0.05f;
+		distanceFromPlayer -= zoomLevel;
+	}
+	
+	private void calculatePitch() {
+		if(Mouse.isButtonDown(1)) {
+			float pitchChange = Mouse.getDY() * 0.3f;
+			pitch -= pitchChange;
+		}
+	}
+	
+	private void calculateAngleAroundPlayer() {
+		if(Mouse.isButtonDown(1)) {
+			float angleChange = Mouse.getDX() * 0.3f;
+			angleAroundPlayer -= angleChange;
+		}
+	}
+	
 	/**
 	 * Moves the camera in which direction the player is facing (when moving).<br>
 	 * Fly cam function within else, just do lock on player.
@@ -148,14 +205,14 @@ public class Camera {
 	}
 	
 	public float getPitch() {
-		return pitch;
+		return pitch% 360;
 	}
 	
 	public float getYaw() {
-		return yaw;
+		return yaw % 360;
 	}
 	
 	public float getRoll() {
-		return roll;
+		return roll%(360*2);
 	}
 }

@@ -41,8 +41,10 @@ public class AnimatedModelRenderer {
 			loadAttribs(5);
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, entity.getTexture().getID());
-			shader.loadTransformationMatrix(VectorMaths.createTransformationMatrix(entity.getPosition(), entity.getRotation(), 1f));
+			Matrix4f transformationMatrix = VectorMaths.createTransformationMatrix(entity.getPosition(), entity.getRotation(), 1f);
+			
 			shader.loadJointTransforms(entity.getJointTransforms());
+			shader.loadTransformationMatrix(transformationMatrix);
 			GL11.glDrawElements(GL11.GL_TRIANGLES, entity.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			
 		}
