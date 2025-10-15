@@ -27,13 +27,14 @@ import com.bulletphysics.util.ObjectArrayList;
 
 import net.zlysie.engine.Camera;
 import net.zlysie.engine.DisplayManager;
+import net.zlysie.engine.models.animated.AnimatedModel;
 
 
 
 public class PhysicsWorldShit {
 	
 	boolean idle; 
-	public Direction direction;
+	public Direction direction = Direction.IDLE;
 	private int gForward = 0;
 	private int gBackward = 0;
 	private int gLeft = 0;
@@ -105,16 +106,6 @@ public class PhysicsWorldShit {
 		gLeft = Keyboard.isKeyDown(Keyboard.KEY_A) ? 1 : 0;
 		gRight = Keyboard.isKeyDown(Keyboard.KEY_D) ? 1 : 0;
 		
-		if(gForward == 1) {
-			direction = Direction.FORWARDS;
-		} else if(gBackward == 1) {
-			direction = Direction.BACKWARDS;
-		} else if(gLeft == 1) {
-			direction = Direction.LEFT;
-		} else if(gRight == 1) {
-			direction = Direction.RIGHT;
-		} 
-		
 		if(gForward == 1 && gLeft == 1) {
 			direction = Direction.FORWARDSLEFT;
 		} else if(gForward == 1 && gRight == 1) {
@@ -123,20 +114,32 @@ public class PhysicsWorldShit {
 			direction = Direction.BACKWARDSLEFT;
 		} else if(gBackward == 1 && gRight == 1) {
 			direction = Direction.BACKWARDSRIGHT;
+		} else {
+			if(gForward == 1) {
+				direction = Direction.FORWARDS;
+			} else if(gBackward == 1) {
+				direction = Direction.BACKWARDS;
+			} else if(gLeft == 1) {
+				direction = Direction.LEFT;
+			} else if(gRight == 1) {
+				direction = Direction.RIGHT;
+			} 
 		}
 		
 		idle = gForward == 0 && gBackward == 0 && gLeft == 0 && gRight == 0;
 		direction = idle ? Direction.IDLE : direction;
 	}
 	
+	private float angle = 0;
+	
 	public float calculateAngleFromDirection() {
 		float angle = 0;
 		switch(direction) {
 		case BACKWARDSLEFT:
-			angle = -45;
+			angle = 180-45;
 			break;
 		case BACKWARDSRIGHT:
-			angle = 45;
+			angle = 180+45;
 			break;
 		case FORWARDSLEFT:
 			angle = 45;
@@ -144,34 +147,37 @@ public class PhysicsWorldShit {
 		case FORWARDSRIGHT:
 			angle = -45;
 			break;
+		case BACKWARDS:
+			angle = 180;
+			break;
 		case LEFT:
 			angle = 90;
 			break;
 		case RIGHT:
 			angle = -90;
 			break;
-		default:
+		case FORWARDS:
 			angle = 0;
+			break;
+		default:
+			angle = this.angle;
 			break;
 		}
 		
-		System.out.println(angle);
+		this.angle = angle;
 		
 		return angle;
 	}
 	
-	public void clientMoveAndDisplay(Camera camera) {
+	public void clientMoveAndDisplay(AnimatedModel model, Camera camera) {
 		float dt = DisplayManager.getFrameTime();
 		
 		input();
 
 		if (dynamicsWorld != null) {
-			
 			Vector3f walkDirection = new Vector3f(0.0f, 0.0f, 0.0f);
 			
-			
 			if(!idle) {
-				
 				float walkVelocity = 1.1f * 4.0f; // 4 km/h -> 1.1 m/s
 				float walkSpeed = walkVelocity * DisplayManager.getFrameTime() * 100 * characterScale;
 				
@@ -195,6 +201,8 @@ public class PhysicsWorldShit {
 				Vector3f strafeDir = new Vector3f(dHorzX+dVertX, 0, dHorzZ+dVertZ);
 				strafeDir.normalize();
 				strafeDir.scale(0.05f);
+				
+				System.out.println(strafeDir);
 				
 				walkDirection.add(strafeDir);
 				

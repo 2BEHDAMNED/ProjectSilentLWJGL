@@ -1,10 +1,5 @@
 package net.zlysie.main;
 
-import java.awt.Color;
-
-import javax.vecmath.Quat4f;
-
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -20,7 +15,6 @@ import net.zlysie.engine.animation.loaders.AnimatedModelLoader;
 import net.zlysie.engine.animation.loaders.AnimationLoader;
 import net.zlysie.engine.models.animated.AnimatedModel;
 import net.zlysie.engine.renderers.MasterRenderer;
-import net.zlysie.engine.utils.VectorMaths;
 
 public class Main {
 
@@ -52,14 +46,16 @@ public class Main {
 		Transform transform = new Transform();
 		
 		while(!Display.isCloseRequested()) {
-			
-			world.clientMoveAndDisplay(camera);
+			world.clientMoveAndDisplay(model, camera);
 			world.ghostObject.getWorldTransform(transform);
-			camera.move(transform);
+			camera.move(model, transform);
+			
 			model.setPosition(transform.origin);
+			
 			if(!world.idle) {
 				model.setRotation(0, -camera.getYaw()+world.calculateAngleFromDirection(), 0);
-			}
+			}	
+			
 			//System.out.println(-camera.getYaw());
 			//light.setPosition(camera.getPosition().x, 0, camera.getPosition().z);
 			

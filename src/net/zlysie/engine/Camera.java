@@ -7,6 +7,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.bulletphysics.linearmath.Transform;
 
+import net.zlysie.engine.models.animated.AnimatedModel;
+
 /**
  * Camera class. Allows the player to see the world.
  * 
@@ -89,7 +91,7 @@ public class Camera {
 	
 	private boolean flagLockLockedMouse = false;
 	
-	public void move(Transform transform) {
+	public void move(AnimatedModel player, Transform transform) {
 		calculateZoom();
 		calculatePitch();
 		calculateAngleAroundPlayer();
@@ -154,6 +156,8 @@ public class Camera {
 	/**
 	 * Moves the camera in which direction the player is facing (when moving).<br>
 	 * Fly cam function within else, just do lock on player.
+	 * @param transform 
+	 * @param player 
 	 */
 	public void move() {
 		if(Mouse.isGrabbed()) {
