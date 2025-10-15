@@ -70,7 +70,13 @@ public class GeometryLoader {
 			float z = Float.parseFloat(posData[i * 3 + 2]);
 			Vector4f position = new Vector4f(x, y, z, 1);
 			Matrix4f.transform(CORRECTION, position, position);
-			vertices.add(new Vertex(vertices.size(), new Vector3f(position.x, position.y, position.z), vertexWeights.get(vertices.size())));
+			if(vertexWeights != null) {
+				vertices.add(new Vertex(vertices.size(), new Vector3f(position.x, position.y, position.z), vertexWeights.get(vertices.size())));
+			} else {
+				vertices.add(new Vertex(vertices.size(), new Vector3f(position.x, position.y, position.z), null));
+				
+			}
+			
 		}
 	}
 
@@ -155,12 +161,16 @@ public class GeometryLoader {
 			normalsArray[i * 3 + 1] = normalVector.y;
 			normalsArray[i * 3 + 2] = normalVector.z;
 			VertexSkinData weights = currentVertex.getWeightsData();
-			jointIdsArray[i * 3] = weights.jointIds.get(0);
-			jointIdsArray[i * 3 + 1] = weights.jointIds.get(1);
-			jointIdsArray[i * 3 + 2] = weights.jointIds.get(2);
-			weightsArray[i * 3] = weights.weights.get(0);
-			weightsArray[i * 3 + 1] = weights.weights.get(1);
-			weightsArray[i * 3 + 2] = weights.weights.get(2);
+			if(weights != null) {
+				jointIdsArray[i * 3] = weights.jointIds.get(0);
+				jointIdsArray[i * 3 + 1] = weights.jointIds.get(1);
+				jointIdsArray[i * 3 + 2] = weights.jointIds.get(2);
+				weightsArray[i * 3] = weights.weights.get(0);
+				weightsArray[i * 3 + 1] = weights.weights.get(1);
+				weightsArray[i * 3 + 2] = weights.weights.get(2);
+			}
+
+
 
 		}
 		return furthestPoint;

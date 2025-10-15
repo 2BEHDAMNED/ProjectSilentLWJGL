@@ -44,7 +44,7 @@ public class PhysicsWorldShit {
 	public PairCachingGhostObject ghostObject;
 	
 	// JAVA NOTE: the original demo scaled the bsp room, we scale up the character
-	private float characterScale = 1f;
+	private float characterScale = 0.5f;
 	
 	// keep the collision shapes, for deletion/cleanup
 	public ObjectArrayList<CollisionShape> collisionShapes = new ObjectArrayList<CollisionShape>();
@@ -92,7 +92,7 @@ public class PhysicsWorldShit {
 		CollisionObject obj = new CollisionObject();
 		obj.setCollisionShape(groundShape);
 		obj.setWorldTransform(groundTransform);
-		dynamicsWorld.addCollisionObject(obj);
+		//dynamicsWorld.addCollisionObject(obj);
 		
 		dynamicsWorld.addCollisionObject(ghostObject, CollisionFilterGroups.CHARACTER_FILTER, (short)(CollisionFilterGroups.STATIC_FILTER | CollisionFilterGroups.DEFAULT_FILTER));
 

@@ -1,8 +1,13 @@
 package net.zlysie.main;
 
+import java.awt.Color;
+
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.linearmath.Transform;
 
 import net.zlysie.engine.Camera;
@@ -15,6 +20,8 @@ import net.zlysie.engine.animation.loaders.AnimatedModelLoader;
 import net.zlysie.engine.animation.loaders.AnimationLoader;
 import net.zlysie.engine.models.animated.AnimatedModel;
 import net.zlysie.engine.renderers.MasterRenderer;
+import net.zlysie.engine.utils.VectorMaths;
+import net.zlysie.engine.utils.collada.ColladaLoader;
 
 public class Main {
 
@@ -27,11 +34,11 @@ public class Main {
 		Animation anim = AnimationLoader.loadAnimation("/models/cat/animation.dae");
 		//model.doAnimation(anim);
 		
-		Entity entity = new Entity("/models/spartan/model.obj", "/models/spartan/texture.png");
+		Entity entity = new Entity(ColladaLoader.loadColladaModel("/models/map.dae"), Loader.generateTexture(Color.gray, 2,2), true);
 		
 		entity.setPosition(-2.5f, 0, 0);
 		entity.setRotation(new Vector3f(0,270,0));
-		entity.setScale(0.1f);
+		//entity.setScale(0.1f);
 		
 		model.setPosition(2.5f, 0, 0);
 
@@ -44,6 +51,15 @@ public class Main {
 		world.initPhysics();
 		
 		Transform transform = new Transform();
+		
+		CollisionObject obj = entity.generateMesh();
+		obj.getWorldTransform(transform);
+		
+		entity.setRotation(VectorMaths.toEulerAngles(transform.getRotation(new Quat4f())));
+		
+		world.dynamicsWorld.addCollisionObject(obj);
+		
+		transform = new Transform();
 		
 		while(!Display.isCloseRequested()) {
 			world.clientMoveAndDisplay(model, camera);

@@ -54,7 +54,7 @@ void main(void){
 	vertex.y = floor(grid.y * vertex.y) / grid.y;
 	vertex.xyz *= snapToPixel.w;
 	
-	gl_Position = vertex;
+	gl_Position = snapToPixel;
 	pass_textureCoords = textureCoords;
 	
 	surfaceNormal = (transformationMatrix * totalNormal).xyz;

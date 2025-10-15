@@ -1,6 +1,8 @@
 package net.zlysie.engine.utils.collada;
 
+import net.zlysie.engine.Loader;
 import net.zlysie.engine.animation.data.AnimationData;
+import net.zlysie.engine.models.RawModel;
 import net.zlysie.engine.models.animated.AnimatedModelData;
 import net.zlysie.engine.models.animated.SkeletonData;
 import net.zlysie.engine.models.animated.SkinningData;
@@ -24,6 +26,14 @@ public class ColladaLoader {
 
 		return new AnimatedModelData(meshData, jointsData);
 	}
+	
+	public static RawModel loadColladaModel(String colladaFile) {
+		XmlNode node = XmlParser.loadXmlFile(colladaFile);
+
+		GeometryLoader g = new GeometryLoader(node.getChild("library_geometries"), null);
+		return Loader.loadToVAO(g.extractModelData());
+	}
+
 
 	public static AnimationData loadColladaAnimation(String colladaFile) {
 		XmlNode node = XmlParser.loadXmlFile(colladaFile);
