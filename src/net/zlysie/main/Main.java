@@ -32,9 +32,9 @@ public class Main {
 		
 		AnimatedModel model = AnimatedModelLoader.loadEntity("/models/cat/model.dae", "/models/cat/texture.png");
 		Animation anim = AnimationLoader.loadAnimation("/models/cat/animation.dae");
-		//model.doAnimation(anim);
+		model.doAnimation(anim);
 		
-		Entity entity = new Entity(ColladaLoader.loadColladaModel("/models/map.dae"), Loader.generateTexture(Color.gray, 2,2), true);
+		Entity entity = new Entity(ColladaLoader.loadColladaModel("/models/map.dae"), Loader.generateTexture(new Color(180, 180,180), 2,2), true);
 		
 		entity.setPosition(-2.5f, 0, 0);
 		entity.setRotation(new Vector3f(0,270,0));
@@ -69,10 +69,11 @@ public class Main {
 			model.setPosition(transform.origin);
 			
 			if(!world.idle) {
-				model.setRotation(0, -camera.getYaw()+world.calculateAngleFromDirection(), 0);
-			}	
+				model.setRotation(0, lerp(model.getRotation().y, -camera.getYaw()+world.calculateAngleFromDirection(), 0.2f), 0);
+			}
 			
-			//System.out.println(-camera.getYaw());
+			model.update();
+			
 			//light.setPosition(camera.getPosition().x, 0, camera.getPosition().z);
 			
 			renderer.processEntity(model);
@@ -87,4 +88,8 @@ public class Main {
 		Loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
+	
+	public static float lerp(float point1, float point2, float fraction) {
+	    return (1 - fraction) * point1 + fraction * point2;
+	  }
 }

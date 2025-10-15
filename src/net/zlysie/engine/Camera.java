@@ -99,7 +99,7 @@ public class Camera {
 		
 		if(!flagLockLockedMouse) {
 			if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
-				lockedMouse = !lockedMouse;
+				
 				flagLockLockedMouse = true;
 			}
 		} else {
@@ -108,9 +108,13 @@ public class Camera {
 			}
 		}
 		
+		lockedMouse = Mouse.isButtonDown(1);
+		
 		Mouse.setGrabbed(lockedMouse);
 		
 		yaw = 180 - (angleAroundPlayer);
+		
+		//System.out.println(distanceFromPlayer);
 	}
 	
 	private void calculateCameraPosition(Transform transform) {
@@ -137,12 +141,20 @@ public class Camera {
 	private void calculateZoom() {
 		float zoomLevel = Mouse.getDWheel() * 0.05f;
 		distanceFromPlayer -= zoomLevel;
+		distanceFromPlayer = clamp(distanceFromPlayer, 1, 20);
+	
 	}
+	
+	float clamp(float value, float min, float max) {
+        return Math.max(min, Math.min(max, value));
+    }
 	
 	private void calculatePitch() {
 		if(lockedMouse) {
 			float pitchChange = Mouse.getDY() * 0.3f;
+			
 			pitch -= pitchChange;
+			pitch = clamp(pitch, -this.maxVerticalTurn, this.maxVerticalTurn);
 		}
 	}
 	

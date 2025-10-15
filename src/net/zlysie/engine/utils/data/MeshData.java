@@ -1,5 +1,12 @@
 package net.zlysie.engine.utils.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
+
 /**
  * This object contains all the mesh data for an animated model that is to be loaded into the VAO.
  * 
@@ -50,6 +57,22 @@ public class MeshData {
 		return vertexWeights;
 	}
 
+	public List<Vertex> getVerticesClasses() {
+		List<Vertex> vertices = new ArrayList<>();
+		
+		
+		for (int i = 0; i < this.vertices.length/3; i++) {
+			float x = (this.vertices[i * 3]);
+			float y = (this.vertices[i * 3 + 1]);
+			float z = (this.vertices[i * 3 + 2]);
+			Vector4f position = new Vector4f(x, y, z, 1);
+			vertices.add(new Vertex(vertices.size(), new Vector3f(position.x, position.y, position.z), null));
+			
+		}
+		
+		return vertices;
+	}
+	
 	public float[] getVertices() {
 		return vertices;
 	}

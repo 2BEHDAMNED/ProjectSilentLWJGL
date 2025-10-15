@@ -31,7 +31,7 @@ void main(void) {
 	vec4 vertex = snapToPixel;
 	vertex.xyz = snapToPixel.xyz / snapToPixel.w;
 	
-	vec2 grid = vec2(60,45);
+	vec2 grid = vec2(100,75);
 	
 	vertex.x = floor(grid.x * vertex.x) / grid.x;
 	vertex.y = floor(grid.y * vertex.y) / grid.y;

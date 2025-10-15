@@ -136,10 +136,10 @@ public class PhysicsWorldShit {
 		float angle = 0;
 		switch(direction) {
 		case BACKWARDSLEFT:
-			angle = 180-45;
+			angle = 135;
 			break;
 		case BACKWARDSRIGHT:
-			angle = 180+45;
+			angle = -135;
 			break;
 		case FORWARDSLEFT:
 			angle = 45;
@@ -202,7 +202,9 @@ public class PhysicsWorldShit {
 				strafeDir.normalize();
 				strafeDir.scale(0.05f);
 				
-				System.out.println(strafeDir);
+				if(Keyboard.isKeyDown(Keyboard.KEY_SPACE) && character.canJump()) {
+					character.jump();
+				}
 				
 				walkDirection.add(strafeDir);
 				
