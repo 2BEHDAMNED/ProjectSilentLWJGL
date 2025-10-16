@@ -11,7 +11,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 import net.zlysie.engine.Loader;
 import net.zlysie.engine.models.RawModel;
-import net.zlysie.engine.utils.data.MeshData;
 import net.zlysie.engine.utils.data.Vertex;
 
 /**

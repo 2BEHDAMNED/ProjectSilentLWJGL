@@ -46,9 +46,9 @@ public class VectorMaths {
 	{
 	    // Abbreviations for the various angular functions
 		
-		double roll = v.z;
-		double pitch = v.x;
-		double yaw = v.y;
+		double roll = v.x;
+		double pitch = v.y;
+		double yaw = v.z;
 		
 	    double cr = Math.cos(roll * 0.5);
 	    double sr = Math.sin(roll * 0.5);

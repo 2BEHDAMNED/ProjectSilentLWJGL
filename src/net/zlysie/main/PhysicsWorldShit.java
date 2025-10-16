@@ -27,7 +27,6 @@ import com.bulletphysics.util.ObjectArrayList;
 
 import net.zlysie.engine.Camera;
 import net.zlysie.engine.DisplayManager;
-import net.zlysie.engine.models.animated.AnimatedModel;
 
 
 
@@ -169,7 +168,7 @@ public class PhysicsWorldShit {
 		return angle;
 	}
 	
-	public void clientMoveAndDisplay(AnimatedModel model, Camera camera) {
+	public void clientMoveAndDisplay(float yaw) {
 		float dt = DisplayManager.getFrameTime();
 		
 		input();
@@ -192,11 +191,11 @@ public class PhysicsWorldShit {
 				float distanceVert = vert * walkSpeed;
 				float distanceHorz = horz * walkSpeed;
 				
-				float dVertX = (float) (distanceVert * Math.sin(Math.toRadians(-camera.getYaw())));
-				float dVertZ = (float) (distanceVert * Math.cos(Math.toRadians(-camera.getYaw())));
+				float dVertX = (float) (distanceVert * Math.sin(Math.toRadians(-yaw)));
+				float dVertZ = (float) (distanceVert * Math.cos(Math.toRadians(-yaw)));
 
-				float dHorzX = (float) (distanceHorz * Math.sin(Math.toRadians(-camera.getYaw() + 90)));
-				float dHorzZ = (float) (distanceHorz * Math.cos(Math.toRadians(-camera.getYaw() + 90)));
+				float dHorzX = (float) (distanceHorz * Math.sin(Math.toRadians(-yaw + 90)));
+				float dHorzZ = (float) (distanceHorz * Math.cos(Math.toRadians(-yaw + 90)));
 				
 				Vector3f strafeDir = new Vector3f(dHorzX+dVertX, 0, dHorzZ+dVertZ);
 				strafeDir.normalize();

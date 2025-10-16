@@ -34,10 +34,10 @@ public class Main {
 		Animation anim = AnimationLoader.loadAnimation("/models/cat/animation.dae");
 		model.doAnimation(anim);
 		
-		Entity entity = new Entity(ColladaLoader.loadColladaModel("/models/map.dae"), Loader.generateTexture(new Color(180, 180,180), 2,2), true);
+		Entity entity = new Entity(ColladaLoader.loadColladaModel("/models/map.dae"), Loader.generateTexture(new Color(180, 180,180), 2,2), null);
 		
 		entity.setPosition(-2.5f, 0, 0);
-		entity.setRotation(new Vector3f(0,270,0));
+		entity.setRotation(new Vector3f(0,0,0));
 		//entity.setScale(0.1f);
 		
 		model.setPosition(2.5f, 0, 0);
@@ -56,13 +56,14 @@ public class Main {
 		obj.getWorldTransform(transform);
 		
 		entity.setRotation(VectorMaths.toEulerAngles(transform.getRotation(new Quat4f())));
+		entity.setPosition(transform.origin);
 		
 		world.dynamicsWorld.addCollisionObject(obj);
 		
 		transform = new Transform();
 		
 		while(!Display.isCloseRequested()) {
-			world.clientMoveAndDisplay(model, camera);
+			world.clientMoveAndDisplay(camera.getYaw());
 			world.ghostObject.getWorldTransform(transform);
 			camera.move(model, transform);
 			

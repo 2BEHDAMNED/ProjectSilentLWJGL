@@ -12,15 +12,17 @@ import org.lwjgl.util.vector.Vector3f;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.shapes.BvhTriangleMeshShape;
 import com.bulletphysics.collision.shapes.CollisionShape;
-import com.bulletphysics.collision.shapes.ConvexHullShape;
 import com.bulletphysics.collision.shapes.IndexedMesh;
 import com.bulletphysics.collision.shapes.TriangleIndexVertexArray;
+import com.bulletphysics.dynamics.DynamicsWorld;
 import com.bulletphysics.linearmath.Transform;
 
 import net.zlysie.engine.models.RawModel;
 import net.zlysie.engine.models.TexturedModel;
+import net.zlysie.engine.utils.VectorMaths;
 import net.zlysie.engine.utils.data.MeshData;
 import net.zlysie.engine.utils.obj.ModelLoader;
+import net.zlysie.main.PhysicsWorldShit;
 
 public class Entity {
 
@@ -41,8 +43,15 @@ public class Entity {
 		this.model = new TexturedModel(ModelLoader.loadOBJ(path), new ModelTexture(texture));
 	}
 
-	public Entity(RawModel model, BufferedImage texture, boolean generateCollisions) {
+	public Entity(RawModel model, BufferedImage texture, PhysicsWorldShit world) {
 		this.model = new TexturedModel(model, new ModelTexture(Loader.loadTexture(texture)));
+		if(world != null && world.dynamicsWorld != null) {
+			CollisionObject obj = this.generateMesh();
+			
+			world.dynamicsWorld.addCollisionObject(obj);
+			
+			
+		}
 	}
 
 	/**
@@ -83,7 +92,8 @@ public class Entity {
 
 			CollisionObject colObject = new CollisionObject();
 			colObject.setCollisionShape(collisionShape);
-			colObject.setWorldTransform(new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), new javax.vecmath.Vector3f(position.x, position.y, position.z), 1f)));
+			System.out.println(VectorMaths.toQuaternion(getRotation()) + " " + getRotation()+ " "+ VectorMaths.toEulerAngles(VectorMaths.toQuaternion(getRotation())));
+			colObject.setWorldTransform(new Transform(new Matrix4f(VectorMaths.toQuaternion(getRotation()), new javax.vecmath.Vector3f(position.x, position.y, position.z), this.getScale())));
 
 
 			return colObject;
@@ -122,11 +132,16 @@ public class Entity {
 	}
 
 	public void setPosition(float dx, float dy, float dz) {
-		this.position.x = dx;
-		this.position.y = dy;
-		this.position.z = dz;
+		
 	}
-
+	
+	public void setPosition(javax.vecmath.Vector3f origin) {
+		this.position.x = origin.x;
+		this.position.y = origin.y;
+		this.position.z = origin.z;
+		
+	}
+	
 	public TexturedModel getModel() {
 		return model;
 	}
@@ -154,4 +169,6 @@ public class Entity {
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
+
+	
 }
